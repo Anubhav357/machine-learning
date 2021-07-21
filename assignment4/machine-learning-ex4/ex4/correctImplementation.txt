@@ -1,0 +1,30 @@
+ for t=1:m
+  %     % Here X is including 1 column at begining
+  %     
+  %     % for layer-1
+      a1 = X(t,:)'; % (n+1) x 1 == 401 x 1
+       
+  %     % for layer-2
+       z2 = Theta1 * a1;  % hidden_layer_size x 1 == 25 x 1
+       a2 = [1; sigmoid(z2)]; % (hidden_layer_size+1) x 1 == 26 x 1
+     
+       % for layer-3
+       z3 = Theta2 * a2; % num_labels x 1 == 10 x 1    
+       a3 = sigmoid(z3); % num_labels x 1 == 10 x 1    
+   
+       yVector = (1:num_labels)'==y(t); % num_labels x 1 == 10 x 1    
+       
+       %calculating delta values
+       delta3 = a3 - yVector; % num_labels x 1 == 10 x 1    
+       
+       delta2 = (Theta2' * delta3) .* [1; sigmoidGradient(z2)]; % (hidden_layer_size+1) x 1 == 26 x 1
+       
+       delta2 = delta2(2:end); % hidden_layer_size x 1 == 25 x 1 %Removing delta2 for bias node  
+       
+  %     % delta_1 is not calculated because we do not associate error with the input  
+  %     
+  %     % CAPITAL delta update
+       Theta1_grad = Theta1_grad + (delta2 * a1'); % 25 x 401
+       Theta2_grad = Theta2_grad + (delta3 * a2'); % 10 x 26
+    
+   end
